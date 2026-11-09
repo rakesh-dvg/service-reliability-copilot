@@ -1,0 +1,22 @@
+groups:
+  - name: service_request_user_impact_demo
+    rules:
+      - alert: ServiceRequestSubmissionUserImpact
+        expr: |
+          (
+            sum(increase(service_request_submission_failures_total[2m])) >= 3
+          )
+          and
+          (
+            sum(increase(service_request_submission_failures_total[2m]))
+            /
+            clamp_min(sum(increase(service_request_submissions_total[2m])), 1)
+          ) > 0.2
+        for: 10s
+        labels:
+          severity: high
+          journey: service_request_submission
+          demo: "true"
+        annotations:
+          summary: "DEMO: Customer service-request submission journey is failing"
+          description: "Accelerated demo alert — failure ratio elevated over the last 2 minutes."

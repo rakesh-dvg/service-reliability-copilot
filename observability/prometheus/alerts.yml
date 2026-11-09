@@ -1,0 +1,19 @@
+groups:
+  - name: service_request_user_impact
+    rules:
+      - alert: ServiceRequestSubmissionUserImpact
+        expr: |
+          (
+            sum(increase(service_request_submission_failures_total[5m]))
+            /
+            clamp_min(sum(increase(service_request_submissions_total[5m])), 1)
+          ) > 0.3
+          and
+          sum(increase(service_request_submissions_total[5m])) >= 5
+        for: 2m
+        labels:
+          severity: high
+          journey: service_request_submission
+        annotations:
+          summary: "Customer service-request submission journey is failing"
+          description: "More than 30% of submissions failed over 5 minutes with at least 5 attempts."

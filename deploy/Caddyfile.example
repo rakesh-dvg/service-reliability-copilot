@@ -1,0 +1,8 @@
+# Example only — replace hostnames before use.
+service.example.com {
+  reverse_proxy frontend:80
+}
+
+api.service.example.com {
+  reverse_proxy backend:8000
+}

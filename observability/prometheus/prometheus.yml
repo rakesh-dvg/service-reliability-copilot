@@ -1,0 +1,29 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+
+# Local/demo stack uses accelerated rules. Production deployments should
+# point rule_files at alerts.yml instead of alerts-demo.yml.
+rule_files:
+  - /etc/prometheus/alerts-demo.yml
+
+
+scrape_configs:
+  - job_name: backend
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["backend:8000"]
+
+  - job_name: responder
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["responder:8080"]
+
+  - job_name: otel-collector
+    static_configs:
+      - targets: ["otel-collector:8889"]
